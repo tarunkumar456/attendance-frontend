@@ -6,6 +6,7 @@ import Login from './components/login/Login';
 import Register from './components/login/Register';
 import Attendance from './Attendance';
 import Mark from './components/Mark/Mark';
+import StudentDashboard from './components/student/studentDashboard';
 export const usercontext = createContext(null);
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
             <Route path={'/register'} element={<Register/>}></Route>
             <Route path='/admin/addRoom' element={<Attendance/>}></Route>
             <Route path={'/markAttendance'} element={<Mark/>}></Route>
+            <Route path={'/student-dashboard'} element={<StudentDashboard/>}></Route>
           </Routes>
     </BrowserRouter>
   );

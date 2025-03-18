@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { startRegistration } from "@simplewebauthn/browser";
 import "./Register.css";
+import img1 from "../../assets/logo.png"
 
 const SERVER_URL = "http://localhost:4000/api/v1";
 
@@ -93,43 +94,93 @@ const Register = () => {
     
     
 
+
     return (
         <div className="register-container">
             <div className="register-box">
-                <h2>Register</h2>
+                <div className="register-header">
+                    <img src={img1} alt="App Logo" className="logo" />
+                    <h2>Create Your Account</h2>
+                    <p>Join our learning community</p>
+                </div>
+
                 <form onSubmit={handleTraditionalRegister}>
-                    <input
-                        type="text"
-                        placeholder="Name"
-                        required
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                    />
-                    <input
-                        type="email"
-                        placeholder="Email"
-                        required
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
-                    <input
-                        type="password"
-                        placeholder="Password"
-                        required
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                    <select value={role} onChange={(e) => setRole(e.target.value)}>
-                        <option value="student">Student</option>
-                        <option value="teacher">Teacher</option>
-                    </select>
-                    {/* <button type="submit">Register</button> */}
+                    <div className="input-group">
+                        <label htmlFor="name">Full Name</label>
+                        <input
+                            id="name"
+                            type="text"
+                            placeholder="Enter your full name"
+                            required
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                        />
+                    </div>
+
+                    <div className="input-group">
+                        <label htmlFor="email">Email</label>
+                        <input
+                            id="email"
+                            type="email"
+                            placeholder="Enter your email"
+                            required
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                    </div>
+
+                    <div className="input-group">
+                        <label htmlFor="password">Password</label>
+                        <div className="password-input">
+                            <input
+                                id="password"
+                                type="password"
+                                placeholder="Create a password"
+                                required
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="input-group">
+                        <label htmlFor="role">Account Type</label>
+                        <div className="role-selector">
+                            <button
+                                type="button"
+                                className={`role-btn ${role === 'student' ? 'active' : ''}`}
+                                onClick={() => setRole('student')}
+                            >
+                                👨🎓 Student
+                            </button>
+                            <button
+                                type="button"
+                                className={`role-btn ${role === 'teacher' ? 'active' : ''}`}
+                                onClick={() => setRole('teacher')}
+                            >
+                                👩🏫 Teacher
+                            </button>
+                        </div>
+                    </div>
+
+
+                    <button 
+                        type="button" 
+                        className="auth-btn traditional-btn"
+                        onClick={handleWebAuthnRegister}
+                    >
+                        Create Account
+                    </button>
                 </form>
-                <button className="webauthn-btn" onClick={handleWebAuthnRegister}>
-                    Register
-                </button>
-                <p onClick={() => navigate("/login")} className="toggle-text">
-                    Already have an account? Login
+
+                <p className="login-prompt">
+                    Already have an account?{" "}
+                    <button 
+                        type="button" 
+                        onClick={() => navigate("/login")}
+                    >
+                        Sign In
+                    </button>
                 </p>
             </div>
         </div>

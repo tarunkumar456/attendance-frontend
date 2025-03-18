@@ -72,39 +72,41 @@ const Mark = () => {
     };
 
     return (
-        <div className="mark-container">
-            <h2>📌 Mark Attendance</h2>
-            <div className="input-container">
-                <FaFingerprint className="input-icon" />
-                <input
-                    type="text"
-                    placeholder="Enter 6-digit unique code"
-                    value={uniqueNumber}
-                    onChange={handleInputChange}
-                    maxLength="6"
-                    className="input-box"
-                />
+        <div className="global">
+            <div className="mark-container">
+                <h2>📌 Mark Attendance</h2>
+                <div className="input-container">
+                    <FaFingerprint className="input-icon" />
+                    <input
+                        type="text"
+                        placeholder="Enter 6-digit unique code"
+                        value={uniqueNumber}
+                        onChange={handleInputChange}
+                        maxLength="6"
+                        className="input-box"
+                    />
+                </div>
+                <div className="input-container">
+                    <input
+                        type="email"
+                        placeholder="Email"
+                        required
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="input-box"
+                    />
+                </div>
+                <button
+                    onClick={handleMarkAttendance}
+                    disabled={uniqueNumber.length !== 6 || isLoading}
+                    className="mark-btn"
+                >
+                    {isLoading ? "Authenticating..." : "Mark Attendance"}
+                </button>
+                {message && <p className={`message ${message.includes("✅") ? "success" : "error"}`}>
+                    {message}
+                </p>}
             </div>
-            <div className="input-container">
-                <input
-                    type="email"
-                    placeholder="Email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="input-box"
-                />
-            </div>
-            <button
-                onClick={handleMarkAttendance}
-                disabled={uniqueNumber.length !== 6 || isLoading}
-                className="mark-btn"
-            >
-                {isLoading ? "Authenticating..." : "Mark Attendance"}
-            </button>
-            {message && <p className={`message ${message.includes("✅") ? "success" : "error"}`}>
-                {message}
-            </p>}
         </div>
     );
 };

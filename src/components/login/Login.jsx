@@ -8,6 +8,7 @@ const Login = () => {
     const [loginEmail, setLoginEmail] = useState("");
     const [loginPassword, setLoginPassword] = useState("");
     const [name, setName] = useState("");
+    const [role, setRole] = useState("student");
     const [isRegister, setIsRegister] = useState(false);
 
     const handleSubmit = async (e) => {
@@ -16,14 +17,22 @@ const Login = () => {
             const url = isRegister
                 ? "http://localhost:4000/api/v1/register"
                 : "http://localhost:4000/api/v1/login";
-            
+
             const data = isRegister
-                ? { name, email: loginEmail, password: loginPassword }
+                ? { name, email: loginEmail, password: loginPassword, role }
                 : { email: loginEmail, password: loginPassword };
-            
-            await axios.post(url, data);
+
+            const response = await axios.post(url, data);
+
             alert(isRegister ? "Registered successfully" : "Logged in successfully");
-            navigate("/");
+
+            if (!isRegister) {
+                console.log(response)
+                const userRole = response.data.user.role;
+                navigate(userRole === "teacher" ? "/teacher-dashboard" : "/student-dashboard");
+            } else {
+                navigate("/");
+            }
         } catch (error) {
             alert(error.response?.data?.message || "Something went wrong");
         }
@@ -35,13 +44,19 @@ const Login = () => {
                 <h2>{isRegister ? "Register" : "Login"}</h2>
                 <form onSubmit={handleSubmit}>
                     {isRegister && (
-                        <input
-                            type="text"
-                            placeholder="Name"
-                            required
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                        />
+                        <>
+                            <input
+                                type="text"
+                                placeholder="Name"
+                                required
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                            />
+                            <select value={role} onChange={(e) => setRole(e.target.value)}>
+                                <option value="student">Student</option>
+                                <option value="teacher">Teacher</option>
+                            </select>
+                        </>
                     )}
                     <input
                         type="email"

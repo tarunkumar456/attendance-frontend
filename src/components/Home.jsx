@@ -29,52 +29,52 @@
 //     </>
 //   )
 // }
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import Navbar from './Navbar/navbar';
-import fingerprintIcon from '../assets/fingerprint.png';
+
+import React from 'react';
+// import { useNavigate } from 'react-router-dom';
+// import fingerprintIcon from '../assets/fingerprint.png';
+import { Link } from 'react-router-dom';
+// import Navbar from './Navbar';
+import './Home.css';
 
 function Home() {
-  const navigate = useNavigate();
-
   return (
     <>
       <Navbar />
       <div className="home-container">
-        <div className="hero">
+        <div className="hero-section">
           <h1>Welcome to Smart Attendance</h1>
-          <p>Secure your attendance with fingerprint authentication</p>
-          <div className="buttons">
-            <button className="btn login" onClick={() => navigate('/login')}>Login</button>
-            <button className="btn signup" onClick={() => navigate('/signup')}>Sign Up</button>
+          <p>Secure attendance with fingerprint authentication</p>
+          <div className="btn-group">
+            <Link to="/login" className="btn">Login</Link>
+            <Link to="/signup" className="btn signup">Sign Up</Link>
           </div>
         </div>
-        <div className="features">
+
+        <section className="features">
           <h2>Key Features</h2>
-          <div className="feature-list">
-            <div className="feature">
-              <img src={fingerprintIcon} alt="Fingerprint" />
+          <div className="features-grid">
+            <div className="feature-card">
+              <img src="https://via.placeholder.com/100" alt="Biometric" />
               <h3>Biometric Security</h3>
-              <p>Use your fingerprint for secure and fast authentication.</p>
+              <p>Use fingerprint for secure and fast authentication.</p>
             </div>
-            <div className="feature">
-              <img src={fingerprintIcon} alt="Live Tracking" />
+            <div className="feature-card">
+              <img src="https://via.placeholder.com/100" alt="Real-time" />
               <h3>Real-time Attendance</h3>
               <p>Instantly mark attendance with biometric verification.</p>
             </div>
-            <div className="feature">
-              <img src={fingerprintIcon} alt="Analytics" />
-              <h3>Analytics & Reports</h3>
+            <div className="feature-card">
+              <img src="https://via.placeholder.com/100" alt="Reports" />
+              <h3>Detailed Reports</h3>
               <p>View detailed attendance reports and trends.</p>
             </div>
           </div>
-        </div>
+        </section>
       </div>
     </>
   );
 }
 
 export default Home;
-
-
-// export default Home

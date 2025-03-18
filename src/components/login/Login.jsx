@@ -1,81 +1,56 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 
+const SERVER_URL = "http://localhost:4000/api/v1";
+
 const Login = () => {
     const navigate = useNavigate();
-    const [loginEmail, setLoginEmail] = useState("");
-    const [loginPassword, setLoginPassword] = useState("");
-    const [name, setName] = useState("");
-    const [role, setRole] = useState("student");
-    const [isRegister, setIsRegister] = useState(false);
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
 
-    const handleSubmit = async (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const url = isRegister
-                ? "http://localhost:4000/api/v1/register"
-                : "http://localhost:4000/api/v1/login";
+            const response = await fetch(`${SERVER_URL}/login`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password }),
+            });
 
-            const data = isRegister
-                ? { name, email: loginEmail, password: loginPassword, role }
-                : { email: loginEmail, password: loginPassword };
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.message);
 
-            const response = await axios.post(url, data);
-
-            alert(isRegister ? "Registered successfully" : "Logged in successfully");
-
-            if (!isRegister) {
-                console.log(response)
-                const userRole = response.data.user.role;
-                navigate(userRole === "teacher" ? "/teacher-dashboard" : "/student-dashboard");
-            } else {
-                navigate("/");
-            }
+            alert("Logged in successfully");
+            navigate(data.user.role === "teacher" ? "/teacher-dashboard" : "/student-dashboard");
         } catch (error) {
-            alert(error.response?.data?.message || "Something went wrong");
+            alert(error.message || "Something went wrong");
         }
     };
 
     return (
         <div className="login-container">
             <div className="login-box">
-                <h2>{isRegister ? "Register" : "Login"}</h2>
-                <form onSubmit={handleSubmit}>
-                    {isRegister && (
-                        <>
-                            <input
-                                type="text"
-                                placeholder="Name"
-                                required
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                            />
-                            <select value={role} onChange={(e) => setRole(e.target.value)}>
-                                <option value="student">Student</option>
-                                <option value="teacher">Teacher</option>
-                            </select>
-                        </>
-                    )}
+                <h2>Login</h2>
+                <form onSubmit={handleLogin}>
                     <input
                         type="email"
                         placeholder="Email"
                         required
-                        value={loginEmail}
-                        onChange={(e) => setLoginEmail(e.target.value)}
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                     />
                     <input
                         type="password"
                         placeholder="Password"
                         required
-                        value={loginPassword}
-                        onChange={(e) => setLoginPassword(e.target.value)}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                     />
-                    <button type="submit">{isRegister ? "Register" : "Login"}</button>
+                    <button type="submit">Login</button>
                 </form>
-                <p onClick={() => setIsRegister(!isRegister)} className="toggle-text">
-                    {isRegister ? "Already have an account? Login" : "Don't have an account? Register"}
+                <p onClick={() => navigate("/register")} className="toggle-text">
+                    Don't have an account? Register
                 </p>
             </div>
         </div>

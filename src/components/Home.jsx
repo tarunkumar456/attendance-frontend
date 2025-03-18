@@ -48,7 +48,7 @@ function Home() {
           <p>Secure attendance with fingerprint authentication</p>
           <div className="btn-group">
             <Link to="/login" className="btn">Login</Link>
-            <Link to="/signup" className="btn signup">Sign Up</Link>
+            <Link to="/register" className="btn signup">Sign Up</Link>
           </div>
         </div>
 

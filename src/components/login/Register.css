@@ -1,4 +1,4 @@
-.login-container {
+.register-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -6,7 +6,7 @@
     background-color: #f0f0f0;
 }
 
-.login-box {
+.register-box {
     background: white;
     padding: 2rem;
     border-radius: 8px;
@@ -15,12 +15,13 @@
     text-align: center;
 }
 
-.login-box h2 {
+.register-box h2 {
     margin-bottom: 1rem;
     color: #333;
 }
 
-.login-box input {
+.register-box input,
+.register-box select {
     width: calc(100% - 20px);
     padding: 12px;
     margin: 10px 0;
@@ -29,7 +30,11 @@
     font-size: 16px;
 }
 
-.login-box button {
+.register-box select {
+    cursor: pointer;
+}
+
+.register-box button {
     width: 100%;
     padding: 12px;
     background-color: #007bff;
@@ -41,8 +46,16 @@
     margin-top: 10px;
 }
 
-.login-box button:hover {
+.register-box button:hover {
     background-color: #0056b3;
+}
+
+.webauthn-btn {
+    background-color: #28a745;
+}
+
+.webauthn-btn:hover {
+    background-color: #218838;
 }
 
 .toggle-text {

@@ -1,0 +1,64 @@
+/* Navbar Styles */
+.navbar {
+    background: #007BFF;
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .menu {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .menu a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+  }
+  
+  .menu a:hover {
+    color: #cce5ff;
+  }
+  
+  /* Hamburger Menu (for mobile view) */
+  .hamburger {
+    display: none;
+    background: none;
+    font-size: 24px;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  /* Responsive Navbar */
+  @media (max-width: 768px) {
+    .menu {
+      display: none;
+      flex-direction: column;
+      position: absolute;
+      top: 60px;
+      right: 0;
+      background: #007BFF;
+      width: 100%;
+      padding: 10px;
+    }
+  
+    .menu.open {
+      display: flex;
+    }
+  
+    .hamburger {
+      display: block;
+    }
+  }
+  

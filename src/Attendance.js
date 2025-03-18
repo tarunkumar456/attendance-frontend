@@ -43,7 +43,7 @@ const Application = () => {
     }
 
     try {
-      await axios.post("http://localhost:5600/api/v1/location/addlocation", { roomNo, coordinates }, { withCredentials: true });
+      await axios.post("http://localhost:4000/api/v1/admin/addRoom", { roomNo, coordinates });
       setMessage({ type: "success", text: "Room data added successfully!" });
       setRoomNo("");
       setCoordinates([]);

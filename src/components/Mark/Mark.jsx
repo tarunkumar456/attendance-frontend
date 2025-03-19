@@ -19,36 +19,12 @@ const Mark = () => {
     }
   };
 
-  const checkLocation = async (lat, long) => {
-    const roomNo = uniqueNumber.slice(-3); // Get last 3 digits of unique number
-    try {
-      const response = await axios.post(`${SERVER_URL}/getRoom`, { roomNo });
-      const { cor1_lat,cor2_lat,cor3_lat,cor4_lat,cor1_long,cor2_long,cor3_long,cor4_long } = response.data.room;
-    
-        // console.log(response.data.room);
-
-      // Calculate the boundary values
-      const minLat = Math.min(cor1_lat, cor2_lat, cor3_lat, cor4_lat);
-      const maxLat = Math.max(cor1_lat, cor2_lat, cor3_lat, cor4_lat);
-      const minLong = Math.min(cor1_long, cor2_long, cor3_long, cor4_long);
-      const maxLong = Math.max(cor1_long, cor2_long, cor3_long, cor4_long);
-
-      // Check if the point is inside the rectangle
-      const isInside =
-        lat >= minLat && lat <= maxLat && long >= minLong && long <= maxLong;
-
-      return isInside;
-    } catch (error) {
-      console.error("Error fetching room data:", error);
-      return false;
-    }
-  };
 
   const handleMarkAttendance = async () => {
-    if (!email.trim()) {
-      setMessage("Please enter a valid email.");
-      return;
-    }
+    // if (!email.trim()) {
+    //   setMessage("Please enter a valid email.");
+    //   return;
+    // }
     if (uniqueNumber.length !== 6) {
       setMessage("Please enter a valid 6-digit number.");
       return;
@@ -58,6 +34,10 @@ const Mark = () => {
     setMessage("");
 
     try {
+      const userDetails = await axios.get(`${SERVER_URL}/islogin`, { withCredentials: true });
+      console.log(userDetails);
+      const email = userDetails.data.user.email;
+      console.log(email)
       // 1. Get WebAuthn challenge from server
       const initResponse = await fetch(
         `${SERVER_URL}/init-auth?email=${email}`,
@@ -97,7 +77,7 @@ const Mark = () => {
       }
 
       if (verifyData.success) {
-        setMessage(`✅ Attendance marked successfully!`);
+
 
         // 4. Get geolocation and validate room
         const getLocation = async () => {
@@ -107,25 +87,52 @@ const Mark = () => {
           }
 
           try {
-            const position = await new Promise((resolve, reject) => {
-              navigator.geolocation.getCurrentPosition(resolve, reject);
+            const getPosition = (options = {}) => new Promise((resolve, reject) => {
+              navigator.geolocation.getCurrentPosition(
+                resolve,
+                reject,
+                {
+                  enableHighAccuracy: true,
+                  maximumAge: 0,
+                  timeout: 10000,
+                  ...options
+                }
+              );
             });
 
-            const lat = Number(position.coords.latitude.toFixed(12));
-            const long = Number(position.coords.longitude.toFixed(12));
+            const position = await getPosition();
 
-            const isInsideRoom = await checkLocation(lat, long);
+            // Process coordinates
+            const lat = Number(position.coords.latitude.toFixed(6));
+            const long = Number(position.coords.longitude.toFixed(6));
+            console.log("lat=", lat, ",long=", long);
 
+            const details = await axios.post(`${SERVER_URL}/getCode`, { uniqueNumber });
+            const roomNo = details.data.data.room;
+            console.log(roomNo);
+            const response = await axios.post(`${SERVER_URL}/getRoom`, { roomNo });
+            const { cor1_lat, cor2_lat, cor3_lat, cor4_lat, cor1_long, cor2_long, cor3_long, cor4_long } = response.data.room;
+
+            // console.log(response.data.room);
+
+            // Calculate the boundary values
+            const minLat = Math.min(cor1_lat, cor2_lat, cor3_lat, cor4_lat);
+            const maxLat = Math.max(cor1_lat, cor2_lat, cor3_lat, cor4_lat);
+            const minLong = Math.min(cor1_long, cor2_long, cor3_long, cor4_long);
+            const maxLong = Math.max(cor1_long, cor2_long, cor3_long, cor4_long);
+            console.log(minLat, " ", maxLat);
+            console.log(minLong, " ", maxLong);
+            // Check if the point is inside the rectangle
+            const isInsideRoom =
+              lat >= minLat && lat <= maxLat && long >= minLong && long <= maxLong;
             if (isInsideRoom) {
-              alert(
-                `✅ Student is present!\nUnique no.: ${uniqueNumber}\nLatitude: ${lat}\nLongitude: ${long}`
-              );
+              setMessage(`✅ Attendance marked successfully!`);
             } else {
-              alert("❌ Trying to make a proxy!");
+              setMessage(`❌ Trying to make a proxy!`);
             }
           } catch (error) {
             console.error("Error getting location:", error);
-            alert("Failed to retrieve location.");
+            setMessage(error.response.data.message)
           }
         };
 
@@ -146,7 +153,7 @@ const Mark = () => {
         <h2>📌 Mark Attendance</h2>
 
         {/* Email Input */}
-        <div className="input-container">
+        {/* <div className="input-container">
           <input
             type="email"
             placeholder="Enter Email"
@@ -155,7 +162,7 @@ const Mark = () => {
             className="input-box"
             required
           />
-        </div>
+        </div> */}
 
         {/* Unique Number Input */}
         <div className="input-container">
@@ -170,7 +177,7 @@ const Mark = () => {
           />
         </div>
 
-        
+
 
         {/* Submit Button */}
         <button
@@ -184,9 +191,8 @@ const Mark = () => {
         {/* Display Message */}
         {message && (
           <p
-            className={`message ${
-              message.includes("✅") ? "success" : "error"
-            }`}
+            className={`message ${message.includes("✅") ? "success" : "error"
+              }`}
           >
             {message}
           </p>

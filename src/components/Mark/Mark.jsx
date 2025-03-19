@@ -182,7 +182,7 @@ const Mark = () => {
         {/* Submit Button */}
         <button
           onClick={handleMarkAttendance}
-          disabled={uniqueNumber.length !== 6 || isLoading || !email}
+          disabled={uniqueNumber.length !== 6 || isLoading}
           className="mark-btn"
         >
           {isLoading ? "Authenticating..." : "Mark Attendance"}
